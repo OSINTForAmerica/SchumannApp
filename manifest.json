@@ -1,11 +1,11 @@
 {
-  "name": "Tomsk Schumann Viewer",
-  "short_name": "SchumannApp",
-  "start_url": "./",
+  "name": "Tomsk Schumann Resonance Viewer",
+  "short_name": "Schumann Viewer",
+  "description": "View Tomsk Schumann Resonance Spectral Data in real time.",
+  "start_url": "/",
   "display": "standalone",
-  "background_color": "#111827",
-  "theme_color": "#111827",
-  "orientation": "portrait",
+  "background_color": "#000000",
+  "theme_color": "#1D4ED8",
   "icons": [
     {
       "src": "icon-192.png",
