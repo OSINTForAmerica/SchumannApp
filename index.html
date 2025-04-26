@@ -1,51 +1,125 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="bg-gray-100 dark:bg-gray-900">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Tomsk Schumann Viewer</title>
+  <title>Tomsk Schumann Resonance Viewer</title>
 
-  <!-- Link to Manifest -->
+  <!-- PWA Manifest -->
   <link rel="manifest" href="manifest.json">
 
-  <!-- Theme Color for Chrome Toolbar -->
-  <meta name="theme-color" content="#111827">
-
-  <!-- Stylesheet -->
-  <link rel="stylesheet" href="style.css">
-
-  <!-- Register Service Worker -->
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js')
-        .then(reg => console.log('Service Worker registered!', reg))
-        .catch(err => console.log('Service Worker registration failed:', err));
+    tailwind.config = {
+      darkMode: 'media',
+      theme: {
+        extend: {},
+      }
     }
   </script>
+
+  <!-- Day.js with plugins -->
+  <script src="https://unpkg.com/dayjs/dayjs.min.js"></script>
+  <script src="https://unpkg.com/dayjs/plugin/utc.js"></script>
+  <script src="https://unpkg.com/dayjs/plugin/timezone.js"></script>
+
+  <!-- GLightbox CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
 </head>
 
-<body>
-  <header>
-    <h1>Tomsk Schumann Resonances</h1>
-  </header>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 min-h-screen flex flex-col">
+  <div class="max-w-5xl mx-auto p-4 flex-grow">
+    <h1 class="text-3xl font-bold mb-6 text-center">Tomsk Schumann Resonance Viewer</h1>
 
-  <main id="content">
-    <div class="image-container">
-      <img src="https://sosrff.tsu.ru/new/shm.jpg" alt="Schumann Resonance">
-      <p>Live Schumann Resonance Graph</p>
+    <div class="flex flex-col sm:flex-row justify-between mb-6 text-center">
+      <div>
+        <h2 class="text-xl font-semibold">Tomsk Local Time</h2>
+        <p id="tomsk-time" class="text-lg">Loading...</p>
+      </div>
+      <div>
+        <h2 class="text-xl font-semibold">Your Local Time</h2>
+        <p id="local-time" class="text-lg">Loading...</p>
+      </div>
     </div>
-    <div class="image-container">
-      <img src="https://sosrff.tsu.ru/new/sch.jpg" alt="Magnetometer">
-      <p>Magnetometer Readout</p>
-    </div>
-    <div class="image-container">
-      <img src="https://sosrff.tsu.ru/new/geomag.jpg" alt="Geomagnetic Activity">
-      <p>Geomagnetic Activity</p>
-    </div>
-  </main>
 
-  <footer>
-    <p>Data: Tomsk State University</p>
+    <!-- Refresh Button -->
+    <div class="text-center mb-6">
+      <button onclick="refreshImages()" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-full shadow-md transition dark:bg-blue-600 dark:hover:bg-blue-700">
+        Refresh Images
+      </button>
+    </div>
+
+    <!-- Spectral Display -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mb-8">
+      <h2 class="text-2xl font-semibold p-4 border-b dark:border-gray-700">Spectral Display</h2>
+      <div class="overflow-x-auto">
+        <a href="https://sosrff.tsu.ru/new/shm.jpg" class="glightbox" data-gallery="schumann">
+          <img id="spectral-img" src="https://sosrff.tsu.ru/new/shm.jpg" alt="Spectral Display" class="w-full cursor-pointer transition duration-300 transform hover:scale-105 hover:brightness-110" onerror="this.onerror=null; this.src='https://via.placeholder.com/800x400?text=Spectral+Display+Unavailable';">
+        </a>
+      </div>
+    </div>
+
+    <!-- Line Graph Display -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+      <h2 class="text-2xl font-semibold p-4 border-b dark:border-gray-700">Line Graph Display</h2>
+      <div class="overflow-x-auto">
+        <a href="https://sosrff.tsu.ru/new/sra.jpg" class="glightbox" data-gallery="schumann">
+          <img id="linegraph-img" src="https://sosrff.tsu.ru/new/sra.jpg" alt="Line Graph Display" class="w-full cursor-pointer transition duration-300 transform hover:scale-105 hover:brightness-110" onerror="this.onerror=null; this.src='https://via.placeholder.com/800x400?text=Line+Graph+Unavailable';">
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <footer class="text-center p-4 text-sm text-gray-500 dark:text-gray-400">
+    Updated live | Auto Dark Mode
   </footer>
+
+  <!-- GLightbox JS -->
+  <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+
+  <script>
+    dayjs.extend(dayjs_plugin_utc);
+    dayjs.extend(dayjs_plugin_timezone);
+
+    function updateTimes() {
+      const tomskTime = dayjs().tz("Asia/Tomsk").format('YYYY-MM-DD HH:mm:ss');
+      const localTime = dayjs().format('YYYY-MM-DD HH:mm:ss');
+      document.getElementById('tomsk-time').textContent = tomskTime;
+      document.getElementById('local-time').textContent = localTime;
+    }
+
+    setInterval(updateTimes, 1000);
+    updateTimes();
+
+    const lightbox = GLightbox({
+      touchNavigation: true,
+      loop: true,
+      zoomable: true,
+      openEffect: 'zoom',
+      closeEffect: 'fade'
+    });
+
+    function refreshImages() {
+      const timestamp = new Date().getTime();
+      document.getElementById('spectral-img').src = `https://sosrff.tsu.ru/new/shm.jpg?t=${timestamp}`;
+      document.getElementById('linegraph-img').src = `https://sosrff.tsu.ru/new/sra.jpg?t=${timestamp}`;
+    }
+  </script>
+
+  <!-- Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then((registration) => {
+          console.log('Service Worker registered:', registration);
+        })
+        .catch((error) => {
+          console.log('Service Worker registration failed:', error);
+        });
+    }
+  </script>
+
 </body>
 </html>
+
