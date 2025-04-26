@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tomsk Schumann Viewer</title>
+
+  <!-- Link to Manifest -->
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Theme Color for Chrome Toolbar -->
+  <meta name="theme-color" content="#111827">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Register Service Worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(reg => console.log('Service Worker registered!', reg))
+        .catch(err => console.log('Service Worker registration failed:', err));
+    }
+  </script>
+</head>
+
+<body>
+  <header>
+    <h1>Tomsk Schumann Resonances</h1>
+  </header>
+
+  <main id="content">
+    <div class="image-container">
+      <img src="https://sosrff.tsu.ru/new/shm.jpg" alt="Schumann Resonance">
+      <p>Live Schumann Resonance Graph</p>
+    </div>
+    <div class="image-container">
+      <img src="https://sosrff.tsu.ru/new/sch.jpg" alt="Magnetometer">
+      <p>Magnetometer Readout</p>
+    </div>
+    <div class="image-container">
+      <img src="https://sosrff.tsu.ru/new/geomag.jpg" alt="Geomagnetic Activity">
+      <p>Geomagnetic Activity</p>
+    </div>
+  </main>
+
+  <footer>
+    <p>Data: Tomsk State University</p>
+  </footer>
+</body>
+</html>
