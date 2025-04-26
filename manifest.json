@@ -1,6 +1,6 @@
 {
   "name": "Tomsk Schumann Viewer",
-  "short_name": "Schumann",
+  "short_name": "SchumannApp",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#111827",
