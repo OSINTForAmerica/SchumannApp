@@ -8,14 +8,15 @@
   "description": "Live Tomsk Schumann Resonance Viewer",
   "icons": [
     {
-      "src": "/SchumannApp/icon-192.png",
+      "src": "/SchumannApp/maskable_icon_x512.png",
       "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "/SchumannApp/icon-512.png",
+      "type": "image/png",
+      "purpose": "maskable"
+},
+{
+      "src": "/SchumannApp/maskable_icon_x512.png",
       "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
+      "type": "image/png",
+      "purpose": "maskable"
+} ]
 }
